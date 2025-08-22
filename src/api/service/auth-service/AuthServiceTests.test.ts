@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
-import { authService } from '../AuthService';
+import { authService } from './AuthService';
 
 import type { LoginDto } from '../../dto/LoginDto';
 import type { RegisterDto } from '../../dto/RegisterDto';
