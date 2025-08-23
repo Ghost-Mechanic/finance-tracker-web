@@ -11,25 +11,38 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
 
-export default function Login() {
+export default function Register() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
+      username: data.get('username'),
       email: data.get('email'),
       password: data.get('password'),
+      confirmPassword: data.get('confirm-password'),
     });
   };
 
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
+
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
+  const handleMouseDownConfirmPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
   const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpConfirmPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
@@ -53,9 +66,19 @@ export default function Login() {
           }}
         >
           <Typography component="h1" variant="h5">
-            Log in
+            Register
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="username"
+              label="Username"
+              type="text"
+              id="username"
+              autoComplete="username"
+            />
             <TextField
               margin="normal"
               required
@@ -74,14 +97,14 @@ export default function Login() {
               label="Password"
               type={showPassword ? 'text' : 'password'}
               id="password"
-              autoComplete="current-password"
+              autoComplete="new-password"
               slotProps={{
                 input: {
                   endAdornment:
                     <InputAdornment position="end">
                       <IconButton
                         aria-label={
-                          showPassword ? 'hide the password' : 'display the password'
+                          showPassword ? 'hide password' : 'show password'
                         }
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
@@ -94,21 +117,49 @@ export default function Login() {
                 }
               }}
             />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirm-password"
+              label="Confirm Password"
+              type={showConfirmPassword ? 'text' : 'password'}
+              id="confirm-password"
+              autoComplete="new-password"
+              slotProps={{
+                input: {
+                  endAdornment:
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label={
+                          showConfirmPassword ? 'hide confirm password' : 'show confirm password'
+                        }
+                        onClick={handleClickShowConfirmPassword}
+                        onMouseDown={handleMouseDownConfirmPassword}
+                        onMouseUp={handleMouseUpConfirmPassword}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                }
+              }}
+            />
+            <Typography sx={{ color: 'var(--color-text-error)' }} >Error: Invalid Credentials</Typography>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Log In
+              Register
             </Button>
           </Box>
-          <Link href='/register' variant='body2'>
-            Register
+          <Link href='/login' variant='body2'>
+            Login
           </Link>
         </Box>
       </Paper>
-      <Typography>Invalid Credentials</Typography>
     </Container>
   );
 }

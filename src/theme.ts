@@ -6,11 +6,12 @@ export const muiTheme = createTheme({
     secondary: { main: '#3a506b' },
     background: {
       default: '#1c2541',
-      paper: '#FFFFFF',
+      paper: '#3a506b',
     },
     text: {
       primary: '#f0f4f8',
       secondary: '#a9b4c2',
     },
   },
+
 });
