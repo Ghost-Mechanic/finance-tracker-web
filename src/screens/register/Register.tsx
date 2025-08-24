@@ -9,98 +9,108 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import LoadingOverlay from '../component/LoadingOverlay';
+
+import { useRegister } from './useRegister';
 
 export default function Register() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      username: data.get('username'),
-      email: data.get('email'),
-      password: data.get('password'),
-      confirmPassword: data.get('confirm-password'),
-    });
-  };
+  const {
+    data,
+    showPassword,
+    showConfirmPassword,
+    loading,
+    error,
+    success,
+    handleClickShowPassword,
+    handleClickShowConfirmPassword,
+    handleMouseDownPassword,
+    handleMouseDownConfirmPassword,
+    handleInputChange,
+    handleSubmit,
+  } = useRegister();
 
-  const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
-  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        navigate('/login');
+      }, 1500); // Redirect after 1.5 seconds
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
-  const handleMouseDownConfirmPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
-  const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
-  const handleMouseUpConfirmPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+      return () => clearTimeout(timer); // Cleanup the timer
+    }
+  }, [success, navigate]);
 
   return (
-    <Container component="main" maxWidth="xs"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '12px',
-      }}
-    >
-      <Paper elevation={6} sx={{ padding: 4, mt: 8 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Typography component="h1" variant="h5">
+    <>
+      {loading && <LoadingOverlay />}
+
+      <Container component="main" maxWidth="xs"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '12px',
+        }}
+      >
+        <Paper elevation={6} sx={{ padding: 4, mt: 8 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Typography component="h1" variant="h5">
             Register
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="username"
-              label="Username"
-              type="text"
-              id="username"
-              autoComplete="username"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              autoComplete="new-password"
-              slotProps={{
-                input: {
-                  endAdornment:
+            </Typography>
+            <Box component="form" data-testid="register-form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="username"
+                label="Username"
+                type="text"
+                id="username"
+                autoComplete="username"
+                value={data.username}
+                onChange={handleInputChange}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                value={data.email}
+                onChange={handleInputChange}
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                autoComplete="new-password"
+                value={data.password}
+                onChange={handleInputChange}
+                slotProps={{
+                  htmlInput: {
+                    'data-testid': 'password-input'
+                  },
+                  input: {
+                    endAdornment:
                     <InputAdornment position="end">
                       <IconButton
                         aria-label={
@@ -108,27 +118,31 @@ export default function Register() {
                         }
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
-                        onMouseUp={handleMouseUpPassword}
                         edge="end"
                       >
                         {showPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
-                }
-              }}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="confirm-password"
-              label="Confirm Password"
-              type={showConfirmPassword ? 'text' : 'password'}
-              id="confirm-password"
-              autoComplete="new-password"
-              slotProps={{
-                input: {
-                  endAdornment:
+                  }
+                }}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type={showConfirmPassword ? 'text' : 'password'}
+                id="confirm-password"
+                autoComplete="new-password"
+                value={data.confirmPassword}
+                onChange={handleInputChange}
+                slotProps={{
+                  htmlInput: {
+                    'data-testid': 'confirm-password-input'
+                  },
+                  input: {
+                    endAdornment:
                     <InputAdornment position="end">
                       <IconButton
                         aria-label={
@@ -136,30 +150,31 @@ export default function Register() {
                         }
                         onClick={handleClickShowConfirmPassword}
                         onMouseDown={handleMouseDownConfirmPassword}
-                        onMouseUp={handleMouseUpConfirmPassword}
                         edge="end"
                       >
                         {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                       </IconButton>
                     </InputAdornment>
-                }
-              }}
-            />
-            <Typography sx={{ color: 'var(--color-text-error)' }} >Error: Invalid Credentials</Typography>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+                  }
+                }}
+              />
+              {error !== '' && <Typography sx={{ color: 'var(--color-text-error)' }} >{error}</Typography>}
+              {success && <Typography sx={{ color: 'green', mt: 2, textAlign: 'center' }}>Registration successful! Redirecting to login...</Typography>}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
               Register
-            </Button>
-          </Box>
-          <Link href='/login' variant='body2'>
+              </Button>
+            </Box>
+            <Link href='/login' variant='body2'>
             Login
-          </Link>
-        </Box>
-      </Paper>
-    </Container>
+            </Link>
+          </Box>
+        </Paper>
+      </Container>
+    </>
   );
 }

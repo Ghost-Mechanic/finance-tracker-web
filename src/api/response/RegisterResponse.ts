@@ -1,4 +1,4 @@
-import type { ESystemStatus } from "../util/ESystemStatus";
+import type { ESystemStatus } from '../util/ESystemStatus';
 
 export interface RegisterResponse {
     status: ESystemStatus;
