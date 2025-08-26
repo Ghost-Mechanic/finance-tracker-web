@@ -107,6 +107,7 @@ export const useRegister = (): useRegister => {
     }
 
     try {
+      data.email = data.email.toLowerCase();
       const response = await authService.register(data);
 
       if (response.status == 'SUCCESS') {
