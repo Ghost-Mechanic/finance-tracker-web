@@ -28,6 +28,7 @@ export default tseslint.config([
       "no-multiple-empty-lines": ["error", { "max": 1 }],
       "eol-last": ["error", "always"],
       "semi": ["error", "always"],
+      "quotes": ["error", "single"],
       "import/order": [
         "error",
         {
