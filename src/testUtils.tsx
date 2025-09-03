@@ -5,6 +5,8 @@ import { render } from '@testing-library/react';
 
 import { muiTheme } from '../src/theme';
 
+import { AuthProvider } from './context/AuthProvider';
+
 import type { RenderOptions } from '@testing-library/react';
 import type { ReactElement } from 'react';
 
@@ -13,7 +15,9 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <ThemeProvider theme={muiTheme}>
       <CssBaseline />
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </ThemeProvider>
   );
 };
