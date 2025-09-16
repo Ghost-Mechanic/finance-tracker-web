@@ -1,7 +1,7 @@
 import type { BudgetCategoryDto } from './BudgetCategoryDto';
 
 export interface BudgetDto {
-  budgetId: number;
+  id: number | null;
   monthNumber: number;
   yearNumber: number;
   totalBudget: number;
