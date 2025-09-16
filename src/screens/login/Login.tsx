@@ -108,7 +108,6 @@ export default function Login() {
                 }}
               />
               {error !== '' && <Typography sx={{ color: 'var(--color-text-error)' }} >{error}</Typography>}
-              {success && <Typography>test test test</Typography>}
               <Button
                 type="submit"
                 fullWidth

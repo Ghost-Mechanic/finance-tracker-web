@@ -165,13 +165,14 @@ export default function Register() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={success}
               >
               Register
               </Button>
             </Box>
-            <Link href='/login' variant='body2'>
-            Login
-            </Link>
+            {!success && <Link href='/login' variant='body2'>
+              Login
+            </Link>}
           </Box>
         </Paper>
       </Container>

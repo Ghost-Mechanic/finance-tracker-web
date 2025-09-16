@@ -1,12 +1,22 @@
 // tests/useLogin.test.ts
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { act, renderHook } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 import { authService } from '../../api/service/auth-service/AuthService';
+import { AuthProvider } from '../../context/AuthProvider';
+import { muiTheme } from '../../theme';
 
 import { useLogin } from './useLogin';
 
-import type React from 'react';
+import type { ReactNode } from 'react';
+
+const Wrapper = ({ children }: { children: ReactNode }) => (
+  <ThemeProvider theme={muiTheme}>
+    <CssBaseline />
+    <AuthProvider>{children}</AuthProvider>
+  </ThemeProvider>
+);
 
 vi.mock('../../src/api/service/auth-service/AuthService', () => ({
   authService: {
@@ -20,7 +30,7 @@ describe('useLogin hook', () => {
   });
 
   it('initializes with default state', () => {
-    const { result } = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin(), { wrapper: Wrapper });
 
     expect(result.current.data).toEqual({
       email: '',
@@ -33,14 +43,14 @@ describe('useLogin hook', () => {
   });
 
   it('toggles password visibility', () => {
-    const { result } = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin(), { wrapper: Wrapper });
 
     act(() => result.current.handleClickShowPassword());
     expect(result.current.showPassword).toBe(true);
   });
 
   it('updates data on input change', () => {
-    const { result } = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin(), { wrapper: Wrapper });
 
     act(() => {
       result.current.handleInputChange({
@@ -52,9 +62,10 @@ describe('useLogin hook', () => {
   });
 
   it('sets success on successful login', async () => {
-    vi.spyOn(authService, 'login').mockResolvedValue({ token: 'SUCCESS' });
+    const fakeJwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjMifQ.signature';
+    vi.spyOn(authService, 'login').mockResolvedValue({ token: fakeJwt });
 
-    const { result } = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin(), { wrapper: Wrapper });
 
     act(() => {
       result.current.handleInputChange({
@@ -77,7 +88,7 @@ describe('useLogin hook', () => {
   it('shows username taken error', async () => {
     vi.spyOn(authService, 'login').mockResolvedValue({ error: 'invalid' });
 
-    const { result } = renderHook(() => useLogin());
+    const { result } = renderHook(() => useLogin(), { wrapper: Wrapper });
 
     act(() => {
       result.current.handleInputChange({

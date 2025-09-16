@@ -1,9 +1,15 @@
+import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 import React from 'react';
 
 import { authService } from '../../api/service/auth-service/AuthService';
+import { useAuth } from '../../context/useAuth';
 
 import type { LoginDto } from '../../api/dto/LoginDto';
+
+interface JwtPayload {
+  userId: string;
+}
 
 interface useLogin {
     data: LoginDto;
@@ -27,6 +33,8 @@ export const useLogin = (): useLogin => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [success, setSuccess] = useState<boolean>(false);
+
+  const { login } = useAuth(); // get login function from context
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   
@@ -53,6 +61,11 @@ export const useLogin = (): useLogin => {
       if ('token' in response) {
         // Successful login
         localStorage.setItem('authToken', response.token); // store token
+
+        const decoded: JwtPayload = jwtDecode(response.token);
+
+        login(decoded.userId); 
+
         setSuccess(true);
       } else if ('error' in response) {
         // Failed login
