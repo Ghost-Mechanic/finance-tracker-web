@@ -3,7 +3,8 @@ import type { RegisterDto } from '../../dto/RegisterDto';
 import type { LoginSuccessResponse, LoginErrorResponse } from '../../response/LoginResponse';
 import type { RegisterResponse } from '../../response/RegisterResponse';
 
-const API_URL = 'http://localhost:8080/api/auth'; 
+const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
+//const API_URL = 'http://localhost:8080/api/auth'; 
 
 // service for authentication, provides endpoints for registration and login
 export const authService = {
